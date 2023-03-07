@@ -1,4 +1,4 @@
-package com.DKUstudy;
+package com.DKUstudy.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
