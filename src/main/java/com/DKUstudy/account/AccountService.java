@@ -25,7 +25,7 @@ public class AccountService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Account ProcessNewAccount(SignUpForm signUpForm) {
+    public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
         newAccount.generateEmailCheckToken();
         sendSignUpConfirmEmail(newAccount);
