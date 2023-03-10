@@ -3,6 +3,7 @@ package com.DKUstudy.account;
 import com.DKUstudy.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
+@Transactional
 public class AccountController {
 
     private final SignUpFormValidator signUpFormValidator;
@@ -58,8 +60,7 @@ public class AccountController {
             return "account/check-email";
         }
 
-        account.completeSignUp();
-        accountService.login(account);
+        accountService.completeSignUp(account);
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
         return "account/check-email";
