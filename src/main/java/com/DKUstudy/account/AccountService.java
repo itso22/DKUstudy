@@ -88,6 +88,7 @@ public class AccountService implements UserDetailsService {
         account.setLocation(profile.getLocation());
         account.setBio(profile.getBio());
         // TODO 프로필 이미지
+        account.setProfileImage(profile.getProfileImage());
         accountRepository.save(account);
     }
 }
