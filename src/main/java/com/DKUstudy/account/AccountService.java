@@ -1,5 +1,6 @@
 package com.DKUstudy.account;
 
+import com.DKUstudy.settings.Notifications;
 import com.DKUstudy.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -87,7 +88,6 @@ public class AccountService implements UserDetailsService {
         account.setOccupation(profile.getOccupation());
         account.setLocation(profile.getLocation());
         account.setBio(profile.getBio());
-        // TODO 프로필 이미지
         account.setProfileImage(profile.getProfileImage());
         accountRepository.save(account);
     }
@@ -97,4 +97,13 @@ public class AccountService implements UserDetailsService {
         accountRepository.save(account);
     }
 
+    public void updateNotifications(Account account, Notifications notifications) {
+        account.setStudyCreatedByWeb(notifications.isStudyCreatedByWeb());
+        account.setStudyCreatedByEmail(notifications.isStudyCreatedByEmail());
+        account.setStudyUpdatedByWeb(notifications.isStudyUpdatedByWeb());
+        account.setStudyUpdatedByEmail(notifications.isStudyUpdatedByEmail());
+        account.setStudyEnrollmentResultByEmail(notifications.isStudyEnrollmentResultByEmail());
+        account.setStudyEnrollmentResultByWeb(notifications.isStudyEnrollmentResultByWeb());
+        accountRepository.save(account);
+    }
 }
