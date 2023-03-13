@@ -21,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
@@ -28,7 +29,6 @@ public class AccountService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
-    @Transactional
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
         newAccount.generateEmailCheckToken();

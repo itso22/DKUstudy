@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
-@Transactional
 public class AccountController {
 
     private final SignUpFormValidator signUpFormValidator;
