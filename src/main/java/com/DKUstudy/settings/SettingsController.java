@@ -130,12 +130,23 @@ public class SettingsController {
 
         Tag tag = tagRepository.findByTitle(title);
         if (tag == null) {
-            tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
+            tag = tagRepository.save(Tag.builder().title(title).build());
         }
 
         accountService.addTag(account, tag);
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/tags/remove")
+    @ResponseBody
+    public ResponseEntity removeTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        String title = tagForm.getTagTitle();
+        Tag tag = tagRepository.findByTitle(title);
+        if (tag == null) {
+            return ResponseEntity.badRequest().build();
+        }
 
+        accountService.removeTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
 }
