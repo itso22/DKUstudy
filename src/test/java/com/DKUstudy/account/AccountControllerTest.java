@@ -1,5 +1,6 @@
 package com.DKUstudy.account;
 
+import com.DKUstudy.email.EmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ class AccountControllerTest {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private AccountRepository accountRepository;
-    @MockBean JavaMailSender javaMailSender;
+    @MockBean EmailService emailService;
 
     @DisplayName("회원가입 화면 테스트")
     @Test

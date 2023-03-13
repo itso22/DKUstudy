@@ -1,5 +1,7 @@
 package com.DKUstudy.account;
 
+import com.DKUstudy.email.EmailMessage;
+import com.DKUstudy.email.EmailService;
 import com.DKUstudy.settings.Notifications;
 import com.DKUstudy.settings.Profile;
 import com.DKUstudy.tag.Tag;
@@ -28,7 +30,7 @@ import java.util.Set;
 public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
-    private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
@@ -49,12 +51,14 @@ public class AccountService implements UserDetailsService {
     }
 
     public void sendSignUpConfirmEmail(Account newAccount) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newAccount.getEmail());
-        mailMessage.setSubject("DKUstudy 회원 가입 인증");
-        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken() +
-                "&email=" + newAccount.getEmail());
-        javaMailSender.send(mailMessage);
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(newAccount.getEmail())
+                .subject("회원 가입 인증")
+                .message("/check-email-token?token=" + newAccount.getEmailCheckToken() +
+                        "&email=" + newAccount.getEmail())
+                .build();
+
+        emailService.sendEmail(emailMessage);
     }
 
     public void login(Account account) {
@@ -107,13 +111,13 @@ public class AccountService implements UserDetailsService {
     }
 
     public void sendLoginLink(Account account) {
-        account.generateEmailCheckToken();
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(account.getEmail());
-        mailMessage.setSubject("DKUSTUDY, 로그인 링크");
-        mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken() +
-                "&email=" + account.getEmail());
-        javaMailSender.send(mailMessage);
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(account.getEmail())
+                .subject("로그인 링크")
+                .message("/login-by-email?token=" + account.getEmailCheckToken() +
+                        "&email=" + account.getEmail())
+                .build();
+        emailService.sendEmail(emailMessage);
     }
 
     public void addTag(Account account, Tag tag) {
