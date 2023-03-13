@@ -3,19 +3,23 @@ package com.DKUstudy.settings;
 import com.DKUstudy.CurrentUser;
 import com.DKUstudy.account.Account;
 import com.DKUstudy.account.AccountService;
+import com.DKUstudy.tag.Tag;
+import com.DKUstudy.tag.TagForm;
+import com.DKUstudy.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 
 @Controller
 @RequestMapping("/settings")
@@ -24,6 +28,7 @@ public class SettingsController {
 
     private final AccountService accountService;
     private final ModelMapper modelMapper;
+    private final TagRepository tagRepository;
 
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -109,4 +114,28 @@ public class SettingsController {
         attributes.addFlashAttribute("message", "닉네임을 수정했습니다.");
         return "redirect:/settings/account" ;
     }
+
+    @GetMapping("/tags")
+    public String updateTags(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        Set<Tag> tags = accountService.getTags(account);
+        model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+        return "settings/tags";
+    }
+
+    @PostMapping("/tags/add")
+    @ResponseBody
+    public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        String title = tagForm.getTagTitle();
+
+        Tag tag = tagRepository.findByTitle(title);
+        if (tag == null) {
+            tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
+        }
+
+        accountService.addTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

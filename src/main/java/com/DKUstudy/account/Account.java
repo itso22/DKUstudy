@@ -1,11 +1,11 @@
 package com.DKUstudy.account;
 
+import com.DKUstudy.tag.Tag;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -54,6 +54,9 @@ public class Account {
     private boolean studyUpdatedByWeb = true;
 
     private LocalDateTime emailCheckTokenGeneratedAt;
+
+    @ManyToMany
+    private Set<Tag> tags;
 
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
